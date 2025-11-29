@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import sampleCourses from "../../Entites/Courses.json";
 import ProgramCard from "./ProgramCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 const categories = [
   "Most Popular",
@@ -25,6 +25,11 @@ export default function ProgramsSection() {
     queryFn: () => base44.entities.Course.list(),
     // If backend is empty or offline, fall back to bundled sample data
     initialData: sampleCourses,
+    // Cache for 5 minutes to prevent unnecessary refetches
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    // Refetch on window focus is disabled for better performance
+    refetchOnWindowFocus: false,
   });
 
   const filteredCourses =
@@ -33,7 +38,7 @@ export default function ProgramsSection() {
       : courses.filter((c) => c.category === activeCategory);
 
   return (
-    <section className="py-16 lg:py-24 bg-[#f8fafc]">
+    <section id="programs-section" className="py-16 lg:py-24 bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-10">
           Explore Our Top Programs

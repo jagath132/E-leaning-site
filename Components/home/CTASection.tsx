@@ -1,9 +1,21 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function CTASection() {
+  const handleExplorePrograms = () => {
+    // Scroll to programs section
+    const programsSection = document.getElementById("programs-section");
+    if (programsSection) {
+      programsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleTalkToAdvisor = () => {
+    // For now, show an alert. In a real app, this would open a contact modal or navigate to contact page
+    alert("Contact form coming soon! Please reach out to our support team.");
+  };
+
   return (
     <section className="py-16 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,13 +47,16 @@ export default function CTASection() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-white text-[#1d69db] hover:bg-gray-100 rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
+              <Button
+                onClick={handleExplorePrograms}
+                className="bg-white text-[#1d69db] hover:bg-[#1d69db] hover:text-white rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all cursor-pointer"
+              >
                 Explore All Programs
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 rounded-full px-8 py-6 text-lg font-semibold"
+                onClick={handleTalkToAdvisor}
+                className="bg-blue-50 text-[#1d69db] hover:bg-[#1d69db] hover:text-white rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all cursor-pointer"
               >
                 Talk to an Advisor
               </Button>

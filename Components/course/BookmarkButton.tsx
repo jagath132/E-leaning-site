@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { base44, Bookmark } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -10,8 +10,18 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import { Bookmark as BookmarkIcon, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
+
+interface BookmarkButtonProps {
+  courseId: string;
+  courseTitle: string;
+  lessonTitle: string;
+  lessonIndex: number;
+  isBookmarked?: boolean;
+  bookmarkId?: string | null;
+  onBookmarkChange?: () => void;
+}
 
 export default function BookmarkButton({
   courseId,
@@ -21,13 +31,14 @@ export default function BookmarkButton({
   isBookmarked = false,
   bookmarkId = null,
   onBookmarkChange,
-}) {
+}: BookmarkButtonProps) {
   const [showDialog, setShowDialog] = useState(false);
   const [notes, setNotes] = useState("");
   const queryClient = useQueryClient();
 
   const createBookmarkMutation = useMutation({
-    mutationFn: (data) => base44.entities.Bookmark.create(data),
+    mutationFn: (data: Partial<Bookmark>) =>
+      base44.entities.Bookmark.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
       toast.success("Lesson bookmarked!");
@@ -38,7 +49,7 @@ export default function BookmarkButton({
   });
 
   const deleteBookmarkMutation = useMutation({
-    mutationFn: (id) => base44.entities.Bookmark.delete(id),
+    mutationFn: (id: string) => base44.entities.Bookmark.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
       toast.success("Bookmark removed");
@@ -79,7 +90,7 @@ export default function BookmarkButton({
           </>
         ) : (
           <>
-            <Bookmark className="w-4 h-4 mr-1" />
+            <BookmarkIcon className="w-4 h-4 mr-1" />
             Bookmark
           </>
         )}

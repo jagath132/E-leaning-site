@@ -1,9 +1,18 @@
-import React from "react";
-
-export const Dialog = ({ children, open, onOpenChange }: any) => {
+export const Dialog = ({
+  children,
+  open,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      onClick={() => onOpenChange?.(false)}
+    >
       {children}
     </div>
   );

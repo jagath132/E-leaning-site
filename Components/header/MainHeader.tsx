@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,10 +40,13 @@ export default function MainHeader() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold">
-              <span className="text-gray-800">simpli</span>
-              <span className="text-[#ff6b35]">learn</span>
-            </span>
+            <Link to="/" className="flex items-center">
+              <img
+                src="/logo.svg"
+                alt="Simplilearn"
+                className="h-8 w-auto"
+              />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}

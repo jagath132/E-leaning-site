@@ -1,13 +1,19 @@
-import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { Course } from "@/api/base44Client";
 
-export default function ProgramCard({ program, index }) {
-  const partnerColors = {
+export default function ProgramCard({
+  program,
+  index,
+}: {
+  program: Course;
+  index: number;
+}) {
+  const partnerColors: Record<string, string> = {
     Purdue: "bg-amber-100 text-amber-800",
     Michigan: "bg-blue-100 text-blue-800",
     "Virginia Tech": "bg-orange-100 text-orange-800",
@@ -16,7 +22,7 @@ export default function ProgramCard({ program, index }) {
     default: "bg-gray-100 text-gray-800",
   };
 
-  const getPartnerColor = (partner) => {
+  const getPartnerColor = (partner: string) => {
     return partnerColors[partner] || partnerColors.default;
   };
 

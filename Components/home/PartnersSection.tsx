@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 const partners = [
@@ -86,8 +85,9 @@ export default function PartnersSection() {
                   alt={partner.name}
                   className="h-10 w-auto object-contain"
                   onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.parentElement.innerHTML = `<span class="font-semibold text-gray-600">${partner.name}</span>`;
+                    const img = e.target as HTMLImageElement;
+                    img.onerror = null;
+                    img.parentElement!.innerHTML = `<span class="font-semibold text-gray-600">${partner.name}</span>`;
                   }}
                 />
               </motion.div>

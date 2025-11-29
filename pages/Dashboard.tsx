@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import MainHeader from "../Components/header/MainHeader";
@@ -17,11 +17,13 @@ import {
   Target,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{
+    id: string;
+    full_name: string;
+    email: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,15 +45,17 @@ export default function Dashboard() {
   // Get most viewed category for personalized greeting
   const topCategory =
     courseViews.length > 0
-      ? courseViews.reduce((acc, view) => {
-          acc[view.course_category] =
-            (acc[view.course_category] || 0) + view.view_count;
+      ? courseViews.reduce((acc: Record<string, number>, view) => {
+          if (view.course_category) {
+            acc[view.course_category] =
+              (acc[view.course_category] || 0) + (view.view_count || 0);
+          }
           return acc;
         }, {})
       : {};
 
   const favoriteCategory = Object.entries(topCategory).sort(
-    (a, b) => b[1] - a[1]
+    (a: [string, number], b: [string, number]) => b[1] - a[1]
   )[0]?.[0];
 
   return (
@@ -162,7 +166,10 @@ export default function Dashboard() {
             {/* Personalized Recommendations */}
             <Card>
               <CardContent className="p-6">
-                <RecommendationEngine />
+                <RecommendationEngine
+                  currentCourseId=""
+                  currentCategory={favoriteCategory || ""}
+                />
               </CardContent>
             </Card>
 

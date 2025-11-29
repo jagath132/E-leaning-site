@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { base44, Question } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -19,10 +19,18 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 
-export default function QASection({ courseId, courseLessons = [] }) {
+interface QASectionProps {
+  courseId: string;
+  courseLessons?: string[];
+}
+
+export default function QASection({
+  courseId,
+  courseLessons = [],
+}: QASectionProps) {
   const [newQuestion, setNewQuestion] = useState("");
   const [selectedLesson, setSelectedLesson] = useState("");
-  const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null);
   const [newAnswer, setNewAnswer] = useState("");
   const queryClient = useQueryClient();
 
@@ -33,7 +41,8 @@ export default function QASection({ courseId, courseLessons = [] }) {
   });
 
   const createQuestionMutation = useMutation({
-    mutationFn: (data) => base44.entities.Question.create(data),
+    mutationFn: (data: Partial<Question>) =>
+      base44.entities.Question.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["questions", courseId] });
       setNewQuestion("");
@@ -42,7 +51,8 @@ export default function QASection({ courseId, courseLessons = [] }) {
   });
 
   const updateQuestionMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Question.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<Question> }) =>
+      base44.entities.Question.update(id, data),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["questions", courseId] }),
   });
@@ -62,7 +72,7 @@ export default function QASection({ courseId, courseLessons = [] }) {
     });
   };
 
-  const handleSubmitAnswer = async (question) => {
+  const handleSubmitAnswer = async (question: Question) => {
     if (!newAnswer.trim()) return;
     const user = await base44.auth.me();
     const updatedAnswers = [
@@ -83,14 +93,14 @@ export default function QASection({ courseId, courseLessons = [] }) {
     setNewAnswer("");
   };
 
-  const handleUpvote = (question) => {
+  const handleUpvote = (question: Question) => {
     updateQuestionMutation.mutate({
       id: question.id,
       data: { upvotes: (question.upvotes || 0) + 1 },
     });
   };
 
-  const handleMarkResolved = (question) => {
+  const handleMarkResolved = (question: Question) => {
     updateQuestionMutation.mutate({
       id: question.id,
       data: { is_resolved: true },

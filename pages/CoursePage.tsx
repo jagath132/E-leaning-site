@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import MainHeader from "../Components/header/MainHeader";
@@ -18,15 +18,12 @@ import {
   Star,
   Play,
   CheckCircle2,
-  Lock,
-  BookOpen,
   Award,
   Heart,
   Share2,
   ChevronRight,
   Video,
   FileText,
-  Download,
   Globe,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -97,9 +94,8 @@ export default function CoursePage() {
         });
       } else {
         return base44.entities.CourseView.create({
-          course_id: courseId,
-          course_title: course?.title,
-          course_category: course?.category,
+          course_id: courseId!,
+          course_category: course?.category || "",
           view_count: 1,
         });
       }
@@ -108,12 +104,19 @@ export default function CoursePage() {
 
   // Create/update progress
   const updateProgressMutation = useMutation({
-    mutationFn: async (data) => {
+    mutationFn: async (
+      data: Partial<{
+        completed_lessons: number[];
+        last_accessed: string;
+        time_spent_minutes: number;
+        is_saved: boolean;
+      }>
+    ) => {
       if (userProgress) {
         return base44.entities.UserProgress.update(userProgress.id, data);
       } else {
         return base44.entities.UserProgress.create({
-          course_id: courseId,
+          course_id: courseId!,
           course_title: course?.title,
           course_category: course?.category,
           course_image: course?.image_url,
@@ -133,7 +136,7 @@ export default function CoursePage() {
     }
   }, [course, courseId]);
 
-  const handleLessonComplete = (lessonIndex) => {
+  const handleLessonComplete = (lessonIndex: number) => {
     const completed = userProgress?.completed_lessons || [];
     if (!completed.includes(lessonIndex)) {
       updateProgressMutation.mutate({
@@ -155,7 +158,7 @@ export default function CoursePage() {
     );
   };
 
-  const isLessonBookmarked = (lessonTitle) => {
+  const isLessonBookmarked = (lessonTitle: string) => {
     return bookmarks.find((b) => b.lesson_title === lessonTitle);
   };
 
@@ -398,7 +401,7 @@ export default function CoursePage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <BookmarkButton
-                                    courseId={courseId}
+                                    courseId={courseId!}
                                     courseTitle={course.title}
                                     lessonTitle={lesson.title}
                                     lessonIndex={index}
@@ -499,7 +502,7 @@ export default function CoursePage() {
                 <Card>
                   <CardContent className="p-6">
                     <QASection
-                      courseId={courseId}
+                      courseId={courseId!}
                       courseLessons={sampleLessons.map((l) => l.title)}
                     />
                   </CardContent>
@@ -582,7 +585,7 @@ export default function CoursePage() {
 
             {/* Recommendations */}
             <RecommendationEngine
-              currentCourseId={courseId}
+              currentCourseId={courseId!}
               currentCategory={course.category}
             />
           </div>

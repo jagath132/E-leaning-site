@@ -1,7 +1,6 @@
-import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { base44, UserProgress } from "@/api/base44Client";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +15,6 @@ import {
   ArrowRight,
   Trash2,
   Calendar,
-  TrendingUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -33,16 +31,16 @@ export default function LearningDashboard() {
 
   const { data: bookmarks = [], isLoading: bookmarksLoading } = useQuery({
     queryKey: ["bookmarks"],
-    queryFn: () => base44.entities.Bookmark.list("-created_date"),
+    queryFn: () => base44.entities.Bookmark.list("-created_at"),
   });
 
   const deleteBookmarkMutation = useMutation({
-    mutationFn: (id) => base44.entities.Bookmark.delete(id),
+    mutationFn: (id: string) => base44.entities.Bookmark.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["bookmarks"] }),
   });
 
   const removeProgressMutation = useMutation({
-    mutationFn: (id) => base44.entities.UserProgress.delete(id),
+    mutationFn: (id: string) => base44.entities.UserProgress.delete(id),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["userProgress"] }),
   });
@@ -96,7 +94,7 @@ export default function LearningDashboard() {
     },
   ];
 
-  const getProgressPercentage = (item) => {
+  const getProgressPercentage = (item: UserProgress) => {
     if (!item.completed_lessons || !item.total_lessons) return 0;
     return Math.round(
       (item.completed_lessons.length / item.total_lessons) * 100
@@ -364,9 +362,9 @@ export default function LearningDashboard() {
                             )}
                             <p className="text-xs text-gray-400 mt-2">
                               <Calendar className="w-3 h-3 inline mr-1" />
-                              {bookmark.created_date &&
+                              {bookmark.created_at &&
                                 format(
-                                  new Date(bookmark.created_date),
+                                  new Date(bookmark.created_at),
                                   "MMM d, yyyy"
                                 )}
                             </p>
