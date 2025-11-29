@@ -1,0 +1,59 @@
+{
+  "name": "Question",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "Reference to the course"
+    },
+    "lesson_title": {
+      "type": "string",
+      "description": "Specific lesson this question relates to"
+    },
+    "question_text": {
+      "type": "string",
+      "description": "The question content"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "answer_text": {
+            "type": "string"
+          },
+          "author_name": {
+            "type": "string"
+          },
+          "author_email": {
+            "type": "string"
+          },
+          "is_instructor": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "upvotes": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "upvotes": {
+      "type": "number",
+      "default": 0
+    },
+    "is_resolved": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["course_id", "question_text"]
+}

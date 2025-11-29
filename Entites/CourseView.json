@@ -1,0 +1,20 @@
+{
+  "name": "CourseView",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string"
+    },
+    "course_title": {
+      "type": "string"
+    },
+    "course_category": {
+      "type": "string"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 1
+    }
+  },
+  "required": ["course_id", "course_category"]
+}

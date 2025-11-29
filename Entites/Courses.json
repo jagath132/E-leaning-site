@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "title": "Generative AI Fundamentals",
+    "category": "Generative AI",
+    "duration": "8 weeks",
+    "cohort_start": "2025-01-15",
+    "partner": "OpenAI Partnership",
+    "image_url": "https://images.unsplash.com/photo-1677442d019cecf8e70f9e0b6c34b8b0?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "2",
+    "title": "Machine Learning with Python",
+    "category": "AI & Machine Learning",
+    "duration": "10 weeks",
+    "cohort_start": "2025-01-20",
+    "partner": "Stanford University",
+    "image_url": "https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "3",
+    "title": "Data Science Masterclass",
+    "category": "Data Science & Business Analytics",
+    "duration": "12 weeks",
+    "cohort_start": "2025-02-01",
+    "partner": "MIT",
+    "image_url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "4",
+    "title": "Agile Project Management",
+    "category": "Project Management",
+    "duration": "6 weeks",
+    "cohort_start": "2025-01-10",
+    "partner": "PMI Certified",
+    "image_url": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop",
+    "is_popular": false
+  },
+  {
+    "id": "5",
+    "title": "Cybersecurity Essentials",
+    "category": "Cyber Security",
+    "duration": "9 weeks",
+    "cohort_start": "2025-02-10",
+    "partner": "ISC² Certified",
+    "image_url": "https://images.unsplash.com/photo-1550751827-4bd94c3e678d?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "6",
+    "title": "Cloud Computing with AWS",
+    "category": "Cloud Computing & DevOps",
+    "duration": "10 weeks",
+    "cohort_start": "2025-02-05",
+    "partner": "Amazon Web Services",
+    "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "7",
+    "title": "Full Stack Web Development",
+    "category": "Software Development",
+    "duration": "14 weeks",
+    "cohort_start": "2025-01-25",
+    "partner": "Meta Developers",
+    "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "8",
+    "title": "Digital Marketing Strategy",
+    "category": "Digital Marketing",
+    "duration": "8 weeks",
+    "cohort_start": "2025-03-01",
+    "partner": "Google Marketing Academy",
+    "image_url": "https://images.unsplash.com/photo-1460925895917-adf4e10482db?w=400&h=250&fit=crop",
+    "is_popular": false
+  },
+  {
+    "id": "9",
+    "title": "Advanced AI Ethics",
+    "category": "Generative AI",
+    "duration": "6 weeks",
+    "cohort_start": "2025-02-15",
+    "partner": "UC Berkeley",
+    "image_url": "https://images.unsplash.com/photo-1677442d019cecf8e70f9e0b6c34b8b0?w=400&h=250&fit=crop",
+    "is_popular": false
+  },
+  {
+    "id": "10",
+    "title": "Deep Learning Specialization",
+    "category": "AI & Machine Learning",
+    "duration": "12 weeks",
+    "cohort_start": "2025-03-05",
+    "partner": "Deeplearning.AI",
+    "image_url": "https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=400&h=250&fit=crop",
+    "is_popular": true
+  },
+  {
+    "id": "11",
+    "title": "Kubernetes & Docker",
+    "category": "Cloud Computing & DevOps",
+    "duration": "8 weeks",
+    "cohort_start": "2025-02-20",
+    "partner": "Linux Foundation",
+    "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop",
+    "is_popular": false
+  },
+  {
+    "id": "12",
+    "title": "Business Analytics with Excel",
+    "category": "Data Science & Business Analytics",
+    "duration": "6 weeks",
+    "cohort_start": "2025-01-30",
+    "partner": "Microsoft",
+    "image_url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop",
+    "is_popular": false
+  }
+]
