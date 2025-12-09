@@ -6,7 +6,6 @@ import MainHeader from "../Components/header/MainHeader";
 import MainFooter from "../Components/footer/MainFooter";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,7 +21,6 @@ import { Slider } from "@/components/ui/slider";
 import {
     Clock,
     Star,
-    Users,
     Filter,
     Search,
     BookOpen,
@@ -77,9 +75,9 @@ export default function Courses() {
         // Assuming mock entity has rating or reviews
 
         return true;
-    }).sort((a, b) => {
-        if (sortBy === "newest") return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
-        if (sortBy === "popular") return (b.enrollment_count || 0) - (a.enrollment_count || 0);
+    }).sort((_a, _b) => {
+        if (sortBy === "newest") return 0; // Would sort by created_at if available
+        if (sortBy === "popular") return 0; // Would sort by enrollment_count if available
         // Price sort would go here
         return 0;
     });
