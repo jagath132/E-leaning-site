@@ -118,6 +118,7 @@ interface Auth {
   logout: () => Promise<void>;
   loginWithGoogle: () => Promise<User>;
   loginWithGithub: () => Promise<User>;
+  handleRedirectResult: () => Promise<User | null>;
 }
 
 interface Base44Client {
@@ -200,7 +201,7 @@ class FirebaseEntity<T extends { id: string }> implements Entity<T> {
   }
 }
 
-import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, GithubAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 
 // Auth implementation
 const authImplementation: Auth = {
@@ -259,56 +260,50 @@ const authImplementation: Auth = {
 
   loginWithGoogle: async () => {
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(firebaseAuth, provider);
-    const user = result.user;
-
-    // Check if user exists in 'users' collection, if not add them
-    const userDocStr = await getDoc(doc(db, "users", user.uid));
-    if (!userDocStr.exists()) {
-      const userData: User = {
-        id: user.uid,
-        full_name: user.displayName || "User",
-        email: user.email || "",
-        created_at: new Date().toISOString(),
-        photo_url: user.photoURL || undefined
-      };
-      await setDoc(doc(db, "users", user.uid), userData);
-      return userData;
-    }
-
-    return {
-      id: user.uid,
-      full_name: user.displayName || "User",
-      email: user.email || "",
-      photo_url: user.photoURL || undefined
-    };
+    // Use redirect instead of popup to avoid popup blockers
+    await signInWithRedirect(firebaseAuth, provider);
+    // The redirect will happen, and we handle the result in a separate check
+    // This will never actually return here, but TypeScript needs a return
+    throw new Error("Redirecting to Google...");
   },
 
   loginWithGithub: async () => {
     const provider = new GithubAuthProvider();
-    const result = await signInWithPopup(firebaseAuth, provider);
-    const user = result.user;
+    // Use redirect instead of popup to avoid popup blockers
+    await signInWithRedirect(firebaseAuth, provider);
+    // The redirect will happen, and we handle the result in a separate check
+    // This will never actually return here, but TypeScript needs a return
+    throw new Error("Redirecting to GitHub...");
+  },
 
-    // Check if user exists in 'users' collection, if not add them
-    const userDocStr = await getDoc(doc(db, "users", user.uid));
-    if (!userDocStr.exists()) {
-      const userData: User = {
+  // Handle redirect result after OAuth login
+  handleRedirectResult: async () => {
+    const result = await getRedirectResult(firebaseAuth);
+    if (result) {
+      const user = result.user;
+
+      // Check if user exists in 'users' collection, if not add them
+      const userDocStr = await getDoc(doc(db, "users", user.uid));
+      if (!userDocStr.exists()) {
+        const userData: User = {
+          id: user.uid,
+          full_name: user.displayName || "User",
+          email: user.email || "",
+          created_at: new Date().toISOString(),
+          photo_url: user.photoURL || undefined
+        };
+        await setDoc(doc(db, "users", user.uid), userData);
+        return userData;
+      }
+
+      return {
         id: user.uid,
         full_name: user.displayName || "User",
         email: user.email || "",
-        created_at: new Date().toISOString(),
         photo_url: user.photoURL || undefined
       };
-      await setDoc(doc(db, "users", user.uid), userData);
-      return userData;
     }
-
-    return {
-      id: user.uid,
-      full_name: user.displayName || "User",
-      email: user.email || "",
-      photo_url: user.photoURL || undefined
-    };
+    return null;
   }
 };
 
