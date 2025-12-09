@@ -121,12 +121,14 @@ export default function MainHeader() {
                 My Learning
               </Button>
             </Link>
-            <Button
-              variant="outline"
-              className="rounded-full px-6 border-gray-300 hover:border-[#1d69db] hover:text-[#1d69db]"
-            >
-              Login
-            </Button>
+            <Link to="/login">
+              <Button
+                variant="outline"
+                className="rounded-full px-6 border-gray-300 hover:border-[#1d69db] hover:text-[#1d69db]"
+              >
+                Login
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -166,9 +168,11 @@ export default function MainHeader() {
               <a href="#" className="text-gray-700 py-2 font-medium">
                 About Us
               </a>
-              <Button className="bg-[#1d69db] hover:bg-[#1557b8] text-white rounded-full mt-2">
-                Login
-              </Button>
+              <Link to="/login">
+                <Button className="bg-[#1d69db] hover:bg-[#1557b8] text-white rounded-full mt-2 w-full">
+                  Login
+                </Button>
+              </Link>
             </nav>
           </div>
         )}
