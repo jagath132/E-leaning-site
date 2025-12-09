@@ -94,15 +94,15 @@ export default function MainFooter() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <span className="text-white">simpli</span>
-              <span className="text-[#ff6b35]">learn</span>
+              <span className="text-white">e-</span>
+              <span className="text-[#ff6b35]">learning</span>
             </motion.div>
             <motion.p
               className="text-gray-300 mb-6 text-sm leading-relaxed"
               whileHover={{ scale: 1.02, color: "#e5e7eb" }}
               transition={{ duration: 0.2 }}
             >
-              Simplilearn is one of the world's leading providers of online
+              E-Learning is one of the world's leading providers of online
               training for Digital Marketing, Cloud Computing, Project
               Management, Data Science, IT, Software Development, and many more
               emerging technologies.

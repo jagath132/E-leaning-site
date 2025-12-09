@@ -56,7 +56,7 @@
     "duration": "10 weeks",
     "cohort_start": "2025-02-05",
     "partner": "Amazon Web Services",
-    "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop",
+    "image_url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=250&fit=crop",
     "is_popular": true
   },
   {
@@ -86,7 +86,7 @@
     "duration": "6 weeks",
     "cohort_start": "2025-02-15",
     "partner": "UC Berkeley",
-    "image_url": "https://images.unsplash.com/photo-1677442d019cecf8e70f9e0b6c34b8b0?w=400&h=250&fit=crop",
+    "image_url": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=250&fit=crop",
     "is_popular": false
   },
   {
@@ -96,7 +96,7 @@
     "duration": "12 weeks",
     "cohort_start": "2025-03-05",
     "partner": "Deeplearning.AI",
-    "image_url": "https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=400&h=250&fit=crop",
+    "image_url": "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=400&h=250&fit=crop",
     "is_popular": true
   },
   {
@@ -106,7 +106,7 @@
     "duration": "8 weeks",
     "cohort_start": "2025-02-20",
     "partner": "Linux Foundation",
-    "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop",
+    "image_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=250&fit=crop",
     "is_popular": false
   },
   {
@@ -116,7 +116,7 @@
     "duration": "6 weeks",
     "cohort_start": "2025-01-30",
     "partner": "Microsoft",
-    "image_url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop",
+    "image_url": "https://images.unsplash.com/photo-1543286386-713df548e9cc?w=400&h=250&fit=crop",
     "is_popular": false
   }
 ]

@@ -1,4 +1,22 @@
-<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <text x="0" y="35" font-family="Arial, sans-serif" font-size="28" font-weight="normal" fill="#333">simpli</text>
-  <text x="70" y="35" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#ff6b35">learn</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon: Book with Play Button -->
+  <path d="M15 10 C15 10 25 10 35 15 C45 20 45 40 35 45 C25 40 15 40 15 40 Z" fill="url(#grad1)" />
+  <path d="M15 10 C15 10 5 10 0 15 C-10 20 -10 40 5 40 C15 40 15 40 15 40 Z" fill="#2563EB" transform="translate(15,0)" />
+  <rect x="14" y="10" width="2" height="30" fill="#1E40AF" />
+  
+  <!-- Play Button Overlay -->
+  <circle cx="25" cy="28" r="8" fill="white" fill-opacity="0.9" />
+  <path d="M23 24 L29 28 L23 32 Z" fill="#3B82F6" />
+
+  <!-- Text: E-Learning -->
+  <text x="55" y="32" font-family="Arial, sans-serif" font-weight="bold" font-size="24" fill="#1F2937">
+    E-Learning
+  </text>
 </svg>

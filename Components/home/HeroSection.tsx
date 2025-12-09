@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +15,7 @@ const slides = [
       { value: "85%", label: "Report career benefits" },
     ],
     cta1: "Explore Programs",
-    cta2: "Try Simplilearn for Business",
+    cta2: "Try E-Learning for Business",
   },
   {
     title: "Be a Leader",
@@ -96,16 +97,20 @@ export default function HeroSection() {
               )}
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                <Button className="bg-[#1d69db] hover:bg-[#1557b8] text-white rounded-full px-8 py-6 text-lg font-medium shadow-lg shadow-blue-200 hover:shadow-xl transition-all">
-                  {slide.cta1}
-                </Button>
-                {slide.cta2 && (
-                  <Button
-                    variant="outline"
-                    className="rounded-full px-8 py-6 text-lg font-medium border-2 border-gray-300 hover:border-[#1d69db] hover:text-[#1d69db]"
-                  >
-                    {slide.cta2}
+                <Link to="/courses">
+                  <Button className="bg-[#1d69db] hover:bg-[#1557b8] text-white rounded-full px-8 py-6 text-lg font-medium shadow-lg shadow-blue-200 hover:shadow-xl transition-all">
+                    {slide.cta1}
                   </Button>
+                </Link>
+                {slide.cta2 && (
+                  <Link to="#">
+                    <Button
+                      variant="outline"
+                      className="rounded-full px-8 py-6 text-lg font-medium border-2 border-gray-300 hover:border-[#1d69db] hover:text-[#1d69db]"
+                    >
+                      {slide.cta2}
+                    </Button>
+                  </Link>
                 )}
               </div>
             </motion.div>
@@ -123,11 +128,10 @@ export default function HeroSection() {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
-                index === currentSlide
-                  ? "bg-[#1d69db] w-8"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
+              className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentSlide
+                ? "bg-[#1d69db] w-8"
+                : "bg-gray-300 hover:bg-gray-400"
+                }`}
             />
           ))}
         </div>

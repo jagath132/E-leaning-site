@@ -1,5 +1,38 @@
+
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+  getDoc,
+  setDoc,
+
+} from "firebase/firestore";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+  onAuthStateChanged
+} from "firebase/auth";
+import { db, auth as firebaseAuth } from "@/lib/firebase";
+
 // Mock Base44 client for local development
-// In production, this would connect to Base44 BaaS
+// Using localStorage for persistence to simulate a real backend
+
+export interface User {
+  id: string;
+  full_name: string;
+  email: string;
+  password?: string; // Not stored in Firestore, just for type compatibility
+  created_at?: string;
+  photo_url?: string;
+}
 
 export interface Course {
   id: string;
@@ -79,7 +112,12 @@ interface Entity<T> {
 }
 
 interface Auth {
-  me: () => Promise<{ id: string; full_name: string; email: string }>;
+  me: () => Promise<User | null>;
+  login: (email: string, password: string) => Promise<User>;
+  signup: (data: Partial<User>) => Promise<User>;
+  logout: () => Promise<void>;
+  loginWithGoogle: () => Promise<User>;
+  loginWithGithub: () => Promise<User>;
 }
 
 interface Base44Client {
@@ -90,108 +128,199 @@ interface Base44Client {
     Bookmark: Entity<Bookmark>;
     UserProgress: Entity<UserProgress>;
     CourseView: Entity<CourseView>;
+    User: Entity<User>;
   };
 }
 
-// Load initial data from JSON files
-const loadData = async (filename: string) => {
-  try {
-    const response = await fetch(`/Entites/${filename}`);
-    return await response.json();
-  } catch (error) {
-    console.warn(`Failed to load ${filename}, using empty array`);
-    return [];
-  }
-};
+class FirebaseEntity<T extends { id: string }> implements Entity<T> {
+  private collectionName: string;
 
-class MockEntity<T extends { id: string }> implements Entity<T> {
-  private data: T[] = [];
-  private filename: string;
-
-  constructor(filename: string) {
-    this.filename = filename;
-    this.loadData();
+  constructor(collectionName: string) {
+    this.collectionName = collectionName;
   }
 
-  private async loadData() {
-    this.data = await loadData(this.filename);
-  }
+  async list(sortStr?: string): Promise<T[]> {
+    const colRef = collection(db, this.collectionName);
+    let q = query(colRef);
 
-  async list(sort?: string): Promise<T[]> {
-    let result = [...this.data];
-    if (sort) {
-      const [field, order] = sort.startsWith("-")
-        ? [sort.slice(1), "desc"]
-        : [sort, "asc"];
-      result.sort((a, b) => {
-        const aVal = (a as any)[field];
-        const bVal = (b as any)[field];
-        if (order === "desc") {
-          return bVal > aVal ? 1 : -1;
-        }
-        return aVal > bVal ? 1 : -1;
-      });
+    if (sortStr) {
+      const [field, order] = sortStr.startsWith("-")
+        ? [sortStr.slice(1), "desc"]
+        : [sortStr, "asc"];
+      q = query(colRef, orderBy(field, order as "asc" | "desc"));
     }
-    return result;
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as T));
   }
 
   async create(data: Partial<T>): Promise<T> {
-    const newItem = { ...data, id: Date.now().toString() } as T;
-    this.data.push(newItem);
-    return newItem;
+    const colRef = collection(db, this.collectionName);
+    // If ID is provided, use setDoc, otherwise addDoc
+    if (data.id) {
+      const docRef = doc(db, this.collectionName, data.id);
+      await setDoc(docRef as any, data as any);
+      return { ...data } as T;
+    } else {
+      const docRef = await addDoc(colRef as any, data as any);
+      return { ...data, id: docRef.id } as T;
+    }
   }
 
   async update(id: string, data: Partial<T>): Promise<T> {
-    const index = this.data.findIndex((item) => item.id === id);
-    if (index === -1) throw new Error("Item not found");
-    this.data[index] = { ...this.data[index], ...data };
-    return this.data[index];
+    const docRef = doc(db, this.collectionName, id);
+    await updateDoc(docRef, data as any);
+    const snap = await getDoc(docRef);
+    return { ...snap.data(), id: snap.id } as T;
   }
 
   async delete(id: string): Promise<void> {
-    const index = this.data.findIndex((item) => item.id === id);
-    if (index === -1) throw new Error("Item not found");
-    this.data.splice(index, 1);
+    const docRef = doc(db, this.collectionName, id);
+    await deleteDoc(docRef);
   }
 
-  async filter(query: Record<string, any>, sort?: string): Promise<T[]> {
-    let result = this.data.filter((item) =>
-      Object.entries(query).every(
-        ([key, value]) => (item as any)[key] === value
-      )
-    );
-    if (sort) {
-      const [field, order] = sort.startsWith("-")
-        ? [sort.slice(1), "desc"]
-        : [sort, "asc"];
-      result.sort((a, b) => {
-        const aVal = (a as any)[field];
-        const bVal = (b as any)[field];
-        if (order === "desc") {
-          return bVal > aVal ? 1 : -1;
-        }
-        return aVal > bVal ? 1 : -1;
-      });
+  async filter(queryObj: Record<string, any>, sortStr?: string): Promise<T[]> {
+    const colRef = collection(db, this.collectionName);
+    const constraints: any[] = [];
+
+    Object.entries(queryObj).forEach(([key, value]) => {
+      constraints.push(where(key, "==", value));
+    });
+
+    if (sortStr) {
+      const [field, order] = sortStr.startsWith("-")
+        ? [sortStr.slice(1), "desc"]
+        : [sortStr, "asc"];
+      constraints.push(orderBy(field, order as "asc" | "desc"));
     }
-    return result;
+
+    const q = query(colRef, ...constraints);
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as T));
   }
 }
 
-const mockAuth: Auth = {
-  me: async () => ({
-    id: "1",
-    full_name: "John Doe",
-    email: "john@example.com",
+import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from "firebase/auth";
+
+// Auth implementation
+const authImplementation: Auth = {
+  me: () => new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+      unsubscribe();
+      if (user) {
+        resolve({
+          id: user.uid,
+          full_name: user.displayName || "User",
+          email: user.email || "",
+          photo_url: user.photoURL || undefined
+        });
+      } else {
+        resolve(null);
+      }
+    });
   }),
+
+  login: async (email, password) => {
+    const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+    const user = userCredential.user;
+    return {
+      id: user.uid,
+      full_name: user.displayName || "User",
+      email: user.email || "",
+      photo_url: user.photoURL || undefined
+    };
+  },
+
+  signup: async (data) => {
+    if (!data.email || !data.password) throw new Error("Email and password required");
+
+    const userCredential = await createUserWithEmailAndPassword(firebaseAuth, data.email, data.password);
+    const user = userCredential.user;
+
+    if (data.full_name) {
+      await updateProfile(user, { displayName: data.full_name });
+    }
+
+    const userData: User = {
+      id: user.uid,
+      full_name: data.full_name || "User",
+      email: data.email,
+      created_at: new Date().toISOString()
+    };
+
+    await setDoc(doc(db, "users", user.uid), userData);
+
+    return userData;
+  },
+
+  logout: async () => {
+    await signOut(firebaseAuth);
+  },
+
+  loginWithGoogle: async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(firebaseAuth, provider);
+    const user = result.user;
+
+    // Check if user exists in 'users' collection, if not add them
+    const userDocStr = await getDoc(doc(db, "users", user.uid));
+    if (!userDocStr.exists()) {
+      const userData: User = {
+        id: user.uid,
+        full_name: user.displayName || "User",
+        email: user.email || "",
+        created_at: new Date().toISOString(),
+        photo_url: user.photoURL || undefined
+      };
+      await setDoc(doc(db, "users", user.uid), userData);
+      return userData;
+    }
+
+    return {
+      id: user.uid,
+      full_name: user.displayName || "User",
+      email: user.email || "",
+      photo_url: user.photoURL || undefined
+    };
+  },
+
+  loginWithGithub: async () => {
+    const provider = new GithubAuthProvider();
+    const result = await signInWithPopup(firebaseAuth, provider);
+    const user = result.user;
+
+    // Check if user exists in 'users' collection, if not add them
+    const userDocStr = await getDoc(doc(db, "users", user.uid));
+    if (!userDocStr.exists()) {
+      const userData: User = {
+        id: user.uid,
+        full_name: user.displayName || "User",
+        email: user.email || "",
+        created_at: new Date().toISOString(),
+        photo_url: user.photoURL || undefined
+      };
+      await setDoc(doc(db, "users", user.uid), userData);
+      return userData;
+    }
+
+    return {
+      id: user.uid,
+      full_name: user.displayName || "User",
+      email: user.email || "",
+      photo_url: user.photoURL || undefined
+    };
+  }
 };
 
 export const base44: Base44Client = {
-  auth: mockAuth,
+  auth: authImplementation,
   entities: {
-    Course: new MockEntity("Courses.json"),
-    Question: new MockEntity("Question.json"),
-    Bookmark: new MockEntity("Bookmark.json"),
-    UserProgress: new MockEntity("UserProgress.json"),
-    CourseView: new MockEntity("CourseView.json"),
+    Course: new FirebaseEntity<Course>("courses"),
+    Question: new FirebaseEntity<Question>("questions"),
+    Bookmark: new FirebaseEntity<Bookmark>("bookmarks"),
+    UserProgress: new FirebaseEntity<UserProgress>("user_progress"),
+    CourseView: new FirebaseEntity<CourseView>("course_views"),
+    User: new FirebaseEntity<User>("users")
   },
 };
+

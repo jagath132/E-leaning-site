@@ -95,7 +95,7 @@ export default function FeaturesSection() {
           <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             Why Choose{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-              Simplilearn
+              E-Learning
             </span>
             ?
           </h2>

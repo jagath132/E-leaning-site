@@ -165,7 +165,7 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
             className="text-3xl font-bold text-white mb-6 flex items-center gap-3"
           >
             <Sparkles className="w-8 h-8 text-yellow-300" />
-            Why Choose Simplilearn?
+            Why Choose E-Learning?
           </motion.h2>
           <div className="space-y-4">
             {highlights.map((highlight, index) => (
@@ -206,12 +206,12 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
 
           <div className="relative text-center mb-6 sm:mb-8">
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
-              className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg"
+              className="flex items-center justify-center mx-auto mb-6"
             >
-              <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+              <img src="/logo.svg" alt="E-Learning" className="h-12 w-auto" />
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 10 }}

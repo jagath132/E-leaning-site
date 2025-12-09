@@ -41,6 +41,7 @@ export const DropdownMenuTrigger = ({
 export const DropdownMenuContent = ({
   children,
   className = "",
+  align = "start",
   open,
   setOpen,
   ...props
@@ -63,10 +64,12 @@ export const DropdownMenuContent = ({
 
   if (!open) return null;
 
+  const alignmentClass = align === "end" ? "right-0" : "left-0";
+
   return (
     <div
       ref={ref}
-      className={`absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded shadow-lg z-50 ${className}`}
+      className={`absolute top-full ${alignmentClass} mt-2 bg-white border border-gray-200 rounded shadow-lg z-50 ${className}`}
       {...props}
     >
       {children}
@@ -81,10 +84,31 @@ export const DropdownMenuItem = ({
 }: any) => {
   return (
     <div
-      className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${className}`}
+      className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center ${className}`}
       {...props}
     >
       {children}
     </div>
+  );
+};
+
+export const DropdownMenuLabel = ({
+  children,
+  className = "",
+  ...props
+}: any) => {
+  return (
+    <div
+      className={`px-4 py-2 text-sm font-semibold ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const DropdownMenuSeparator = ({ className = "", ...props }: any) => {
+  return (
+    <div className={`-mx-1 my-1 h-px bg-muted ${className}`} {...props} />
   );
 };

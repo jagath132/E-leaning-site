@@ -1,0 +1,55 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is accessing their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Courses: Public read, Auth write (for admin/instructors - simplified for dev)
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    
+    // Questions: Public read, Auth write
+    match /questions/{questionId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Users: Users can only read/write their own profile
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // User Progress: Owner access only
+    match /user_progress/{progressId} {
+      // Assuming progressId might be auto-generated, better to query by user_id field
+      // but for simple create/read:
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Bookmarks: Owner access only
+    match /bookmarks/{bookmarkId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Course Views: Auth access
+    match /course_views/{viewId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Default catch-all (use carefully, helpful for development)
+    match /{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}

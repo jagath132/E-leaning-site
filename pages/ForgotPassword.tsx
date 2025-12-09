@@ -41,7 +41,7 @@ const ForgotPassword: React.FC = () => {
                                 transition={{ duration: 0.15 }}
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-200" />
-                                <Mail className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 ${focusedField === 'email' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
+                                <Mail className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 z-10 ${focusedField === 'email' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
                                 <Input
                                     type="email"
                                     placeholder="Email address"

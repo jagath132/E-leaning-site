@@ -10,7 +10,7 @@ export default function Preloader() {
         >
             <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <h2 className="text-2xl font-bold text-primary tracking-wider">Simplilearn</h2>
+                <h2 className="text-2xl font-bold text-primary tracking-wider">E-Learning</h2>
             </div>
         </motion.div>
     );

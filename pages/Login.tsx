@@ -6,19 +6,41 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
+
 const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validation
+        if (!formData.email || !formData.password) {
+            toast.error("Please fill in all fields");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
+
         setLoading(true);
-        // Simulate API call with faster response
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLoading(false);
-        navigate("/dashboard");
+        try {
+            await base44.auth.login(formData.email, formData.password);
+            toast.success("Successfully logged in!");
+            navigate("/dashboard");
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Login failed");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -38,10 +60,12 @@ const Login: React.FC = () => {
                         transition={{ duration: 0.15 }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-200" />
-                        <Mail className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 ${focusedField === 'email' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
+                        <Mail className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 z-10 ${focusedField === 'email' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
                         <Input
                             type="email"
                             placeholder="Email address"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             onFocus={() => setFocusedField('email')}
                             onBlur={() => setFocusedField(null)}
                             className="relative pl-9 sm:pl-10 h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 text-slate-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-0 focus-visible:border-purple-500 transition-all duration-200 rounded-xl"
@@ -64,10 +88,12 @@ const Login: React.FC = () => {
                         transition={{ duration: 0.15 }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-200" />
-                        <Lock className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 ${focusedField === 'password' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
+                        <Lock className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 z-10 ${focusedField === 'password' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
                         <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
+                            value={formData.password}
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                             onFocus={() => setFocusedField('password')}
                             onBlur={() => setFocusedField(null)}
                             className="relative pl-9 sm:pl-10 pr-9 sm:pr-10 h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 text-slate-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-0 focus-visible:border-purple-500 transition-all duration-200 rounded-xl"
@@ -78,7 +104,7 @@ const Login: React.FC = () => {
                             onClick={() => setShowPassword(!showPassword)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="absolute right-2.5 sm:right-3 top-2.5 sm:top-3 text-gray-400 hover:text-purple-600 transition-colors focus:outline-none"
+                            className="absolute right-2.5 sm:right-3 top-2.5 sm:top-3 text-gray-400 hover:text-purple-600 transition-colors focus:outline-none z-10"
                         >
                             {showPassword ? (
                                 <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -153,6 +179,15 @@ const Login: React.FC = () => {
                         <Button
                             type="button"
                             variant="outline"
+                            onClick={async () => {
+                                try {
+                                    await base44.auth.loginWithGithub();
+                                    toast.success("Successfully logged in with Github!");
+                                    navigate("/dashboard");
+                                } catch (error) {
+                                    toast.error(error instanceof Error ? error.message : "Github login failed");
+                                }
+                            }}
                             className="w-full h-10 sm:h-11 text-xs sm:text-sm bg-white border-2 border-slate-200 text-slate-700 hover:bg-gradient-to-br hover:from-slate-50 hover:to-white hover:border-purple-300 shadow-md hover:shadow-lg transition-all duration-200 rounded-xl"
                         >
                             <Github className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" /> Github
@@ -162,6 +197,15 @@ const Login: React.FC = () => {
                         <Button
                             type="button"
                             variant="outline"
+                            onClick={async () => {
+                                try {
+                                    await base44.auth.loginWithGoogle();
+                                    toast.success("Successfully logged in with Google!");
+                                    navigate("/dashboard");
+                                } catch (error) {
+                                    toast.error(error instanceof Error ? error.message : "Google login failed");
+                                }
+                            }}
                             className="w-full h-10 sm:h-11 text-xs sm:text-sm bg-white border-2 border-slate-200 text-slate-700 hover:bg-gradient-to-br hover:from-slate-50 hover:to-white hover:border-blue-300 shadow-md hover:shadow-lg transition-all duration-200 rounded-xl"
                         >
                             <svg className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 24 24">

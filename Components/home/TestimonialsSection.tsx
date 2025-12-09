@@ -30,7 +30,7 @@ const testimonials = [
     image:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80",
     content:
-      "Simplilearn's cloud computing program gave me the skills I needed to transition from a traditional IT role to cloud architecture. The AWS and Azure certifications opened so many doors.",
+      "E-Learning's cloud computing program gave me the skills I needed to transition from a traditional IT role to cloud architecture. The AWS and Azure certifications opened so many doors.",
     rating: 5,
     program: "Cloud Computing",
   },
@@ -53,7 +53,7 @@ export default function TestimonialsSection() {
             Success Stories
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Hear from learners who transformed their careers with Simplilearn
+            Hear from learners who transformed their careers with E-Learning
           </p>
         </div>
 
@@ -119,11 +119,10 @@ export default function TestimonialsSection() {
                 <button
                   key={index}
                   onClick={() => setCurrent(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    index === current
+                  className={`w-3 h-3 rounded-full transition-all ${index === current
                       ? "bg-[#1d69db] w-8"
                       : "bg-gray-300 hover:bg-gray-400"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
