@@ -23,11 +23,11 @@ const Login: React.FC = () => {
 
     return (
         <AuthLayout title="Welcome Back" subtitle="Sign in to continue your learning journey">
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 }}
+                    transition={{ delay: 0.3 }}
                     className="space-y-2"
                 >
                     <motion.div
@@ -35,16 +35,16 @@ const Login: React.FC = () => {
                         animate={{
                             scale: focusedField === 'email' ? 1.02 : 1,
                         }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.15 }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-300" />
-                        <Mail className={`absolute left-3 top-3 h-5 w-5 transition-all duration-300 ${focusedField === 'email' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-200" />
+                        <Mail className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 ${focusedField === 'email' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
                         <Input
                             type="email"
                             placeholder="Email address"
                             onFocus={() => setFocusedField('email')}
                             onBlur={() => setFocusedField(null)}
-                            className="relative pl-10 h-12 bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 text-slate-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-0 focus-visible:border-purple-500 transition-all duration-300 rounded-xl"
+                            className="relative pl-9 sm:pl-10 h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 text-slate-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-0 focus-visible:border-purple-500 transition-all duration-200 rounded-xl"
                             required
                         />
                     </motion.div>
@@ -53,7 +53,7 @@ const Login: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.8 }}
+                    transition={{ delay: 0.35 }}
                     className="space-y-2"
                 >
                     <motion.div
@@ -61,16 +61,16 @@ const Login: React.FC = () => {
                         animate={{
                             scale: focusedField === 'password' ? 1.02 : 1,
                         }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.15 }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-300" />
-                        <Lock className={`absolute left-3 top-3 h-5 w-5 transition-all duration-300 ${focusedField === 'password' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl opacity-0 group-focus-within:opacity-20 blur transition-opacity duration-200" />
+                        <Lock className={`absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200 ${focusedField === 'password' ? 'text-purple-600 scale-110' : 'text-gray-400'}`} />
                         <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             onFocus={() => setFocusedField('password')}
                             onBlur={() => setFocusedField(null)}
-                            className="relative pl-10 pr-10 h-12 bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 text-slate-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-0 focus-visible:border-purple-500 transition-all duration-300 rounded-xl"
+                            className="relative pl-9 sm:pl-10 pr-9 sm:pr-10 h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 text-slate-900 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-0 focus-visible:border-purple-500 transition-all duration-200 rounded-xl"
                             required
                         />
                         <motion.button
@@ -78,12 +78,12 @@ const Login: React.FC = () => {
                             onClick={() => setShowPassword(!showPassword)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="absolute right-3 top-3 text-gray-400 hover:text-purple-600 transition-colors focus:outline-none"
+                            className="absolute right-2.5 sm:right-3 top-2.5 sm:top-3 text-gray-400 hover:text-purple-600 transition-colors focus:outline-none"
                         >
                             {showPassword ? (
-                                <EyeOff className="h-5 w-5" />
+                                <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
                             ) : (
-                                <Eye className="h-5 w-5" />
+                                <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                             )}
                         </motion.button>
                     </motion.div>
@@ -101,11 +101,11 @@ const Login: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9 }}
+                    transition={{ delay: 0.4 }}
                 >
                     <Button
                         type="submit"
-                        className="relative w-full h-12 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white font-semibold shadow-lg shadow-purple-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/60 active:scale-[0.98] rounded-xl overflow-hidden group"
+                        className="relative w-full h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white font-semibold shadow-lg shadow-purple-500/50 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/60 active:scale-[0.98] rounded-xl overflow-hidden group"
                         disabled={loading}
                     >
                         <motion.div
@@ -114,17 +114,17 @@ const Login: React.FC = () => {
                                 x: ['-100%', '100%'],
                             }}
                             transition={{
-                                duration: 2,
+                                duration: 1.5,
                                 repeat: Infinity,
                                 ease: "linear",
                             }}
                         />
                         <span className="relative flex items-center justify-center gap-2">
                             {loading ? (
-                                <Loader2 className="h-5 w-5 animate-spin" />
+                                <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                             ) : (
                                 <>
-                                    <Zap className="h-4 w-4" />
+                                    <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                     Sign In
                                 </>
                             )}
@@ -146,25 +146,25 @@ const Login: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.0 }}
-                    className="grid grid-cols-2 gap-4"
+                    transition={{ delay: 0.45 }}
+                    className="grid grid-cols-2 gap-3 sm:gap-4"
                 >
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button
                             type="button"
                             variant="outline"
-                            className="w-full bg-white border-2 border-slate-200 text-slate-700 hover:bg-gradient-to-br hover:from-slate-50 hover:to-white hover:border-purple-300 shadow-md hover:shadow-lg transition-all duration-300 rounded-xl"
+                            className="w-full h-10 sm:h-11 text-xs sm:text-sm bg-white border-2 border-slate-200 text-slate-700 hover:bg-gradient-to-br hover:from-slate-50 hover:to-white hover:border-purple-300 shadow-md hover:shadow-lg transition-all duration-200 rounded-xl"
                         >
-                            <Github className="mr-2 h-4 w-4" /> Github
+                            <Github className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" /> Github
                         </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button
                             type="button"
                             variant="outline"
-                            className="w-full bg-white border-2 border-slate-200 text-slate-700 hover:bg-gradient-to-br hover:from-slate-50 hover:to-white hover:border-blue-300 shadow-md hover:shadow-lg transition-all duration-300 rounded-xl"
+                            className="w-full h-10 sm:h-11 text-xs sm:text-sm bg-white border-2 border-slate-200 text-slate-700 hover:bg-gradient-to-br hover:from-slate-50 hover:to-white hover:border-blue-300 shadow-md hover:shadow-lg transition-all duration-200 rounded-xl"
                         >
-                            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+                            <svg className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 24 24">
                                 <path
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                                     fill="#4285F4"
@@ -190,8 +190,8 @@ const Login: React.FC = () => {
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 1.1 }}
-                    className="text-center text-sm text-gray-600 mt-6"
+                    transition={{ delay: 0.5 }}
+                    className="text-center text-xs sm:text-sm text-gray-600 mt-4 sm:mt-6"
                 >
                     Don't have an account?{" "}
                     <Link
