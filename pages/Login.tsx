@@ -16,23 +16,6 @@ const Login: React.FC = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const navigate = useNavigate();
 
-    // Handle OAuth redirect result
-    useEffect(() => {
-        const checkRedirect = async () => {
-            try {
-                const user = await base44.auth.handleRedirectResult();
-                if (user) {
-                    toast.success("Successfully logged in!");
-                    navigate("/dashboard");
-                }
-            } catch (error) {
-                console.error("Redirect error:", error);
-                // Silently ignore redirect errors as they'll occur on normal page loads
-            }
-        };
-        checkRedirect();
-    }, [navigate]);
-
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 

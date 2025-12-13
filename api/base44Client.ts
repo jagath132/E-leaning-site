@@ -18,7 +18,8 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   updateProfile,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signInWithPopup
 } from "firebase/auth";
 import { db, auth as firebaseAuth } from "@/lib/firebase";
 
@@ -201,7 +202,9 @@ class FirebaseEntity<T extends { id: string }> implements Entity<T> {
   }
 }
 
-import { GoogleAuthProvider, GithubAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
+
+import { GoogleAuthProvider, GithubAuthProvider, getRedirectResult } from "firebase/auth";
+
 
 // Auth implementation
 const authImplementation: Auth = {
@@ -258,33 +261,19 @@ const authImplementation: Auth = {
     await signOut(firebaseAuth);
   },
 
+
   loginWithGoogle: async () => {
     const provider = new GoogleAuthProvider();
-    // Use redirect instead of popup to avoid popup blockers
-    await signInWithRedirect(firebaseAuth, provider);
-    // The redirect will happen, and we handle the result in a separate check
-    // This will never actually return here, but TypeScript needs a return
-    throw new Error("Redirecting to Google...");
-  },
-
-  loginWithGithub: async () => {
-    const provider = new GithubAuthProvider();
-    // Use redirect instead of popup to avoid popup blockers
-    await signInWithRedirect(firebaseAuth, provider);
-    // The redirect will happen, and we handle the result in a separate check
-    // This will never actually return here, but TypeScript needs a return
-    throw new Error("Redirecting to GitHub...");
-  },
-
-  // Handle redirect result after OAuth login
-  handleRedirectResult: async () => {
-    const result = await getRedirectResult(firebaseAuth);
-    if (result) {
+    try {
+      // Use popup for better reliability
+      const result = await signInWithPopup(firebaseAuth, provider);
       const user = result.user;
 
       // Check if user exists in 'users' collection, if not add them
-      const userDocStr = await getDoc(doc(db, "users", user.uid));
-      if (!userDocStr.exists()) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
         const userData: User = {
           id: user.uid,
           full_name: user.displayName || "User",
@@ -292,18 +281,110 @@ const authImplementation: Auth = {
           created_at: new Date().toISOString(),
           photo_url: user.photoURL || undefined
         };
-        await setDoc(doc(db, "users", user.uid), userData);
+        await setDoc(userDocRef, userData);
         return userData;
       }
 
+      const existingUserData = userDocSnap.data();
       return {
         id: user.uid,
-        full_name: user.displayName || "User",
+        full_name: user.displayName || existingUserData?.full_name || "User",
         email: user.email || "",
-        photo_url: user.photoURL || undefined
+        photo_url: user.photoURL || existingUserData?.photo_url || undefined
       };
+    } catch (error: any) {
+      console.error('Google login error:', error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Login cancelled');
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error('Popup blocked. Please allow popups for this site.');
+      }
+      throw new Error(error.message || 'Google login failed');
     }
-    return null;
+  },
+
+  loginWithGithub: async () => {
+    const provider = new GithubAuthProvider();
+    try {
+      // Use popup for better reliability
+      const result = await signInWithPopup(firebaseAuth, provider);
+      const user = result.user;
+
+      // Check if user exists in 'users' collection, if not add them
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
+        const userData: User = {
+          id: user.uid,
+          full_name: user.displayName || "User",
+          email: user.email || "",
+          created_at: new Date().toISOString(),
+          photo_url: user.photoURL || undefined
+        };
+        await setDoc(userDocRef, userData);
+        return userData;
+      }
+
+      const existingUserData = userDocSnap.data();
+      return {
+        id: user.uid,
+        full_name: user.displayName || existingUserData?.full_name || "User",
+        email: user.email || "",
+        photo_url: user.photoURL || existingUserData?.photo_url || undefined
+      };
+    } catch (error: any) {
+      console.error('GitHub login error:', error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Login cancelled');
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error('Popup blocked. Please allow popups for this site.');
+      }
+      throw new Error(error.message || 'GitHub login failed');
+    }
+  },
+
+
+  // Handle redirect result after OAuth login
+  handleRedirectResult: async () => {
+    try {
+      const result = await getRedirectResult(firebaseAuth);
+      if (result) {
+        const user = result.user;
+        console.log('OAuth redirect successful:', user.email);
+
+        // Check if user exists in 'users' collection, if not add them
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          console.log('Creating new user document for:', user.email);
+          const userData: User = {
+            id: user.uid,
+            full_name: user.displayName || "User",
+            email: user.email || "",
+            created_at: new Date().toISOString(),
+            photo_url: user.photoURL || undefined
+          };
+          await setDoc(userDocRef, userData);
+          return userData;
+        }
+
+        // Return existing user data
+        const existingUserData = userDocSnap.data();
+        return {
+          id: user.uid,
+          full_name: user.displayName || existingUserData?.full_name || "User",
+          email: user.email || "",
+          photo_url: user.photoURL || existingUserData?.photo_url || undefined
+        };
+      }
+      return null;
+    } catch (error: any) {
+      console.error('OAuth redirect error:', error);
+      // Re-throw with more context
+      throw new Error(error.message || 'OAuth authentication failed');
+    }
   }
 };
 
