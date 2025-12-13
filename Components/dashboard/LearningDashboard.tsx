@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44, UserProgress } from "@/api/base44Client";
+import { base44, UserProgress, User as Base44User } from "@/api/base44Client";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -23,15 +24,39 @@ import { format } from "date-fns";
 
 export default function LearningDashboard() {
   const queryClient = useQueryClient();
+  const [user, setUser] = useState<Base44User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await base44.auth.me();
+        setUser(userData);
+      } catch (error) {
+        console.log("User not logged in");
+      }
+    };
+    fetchUser();
+  }, []);
 
   const { data: progress = [], isLoading: progressLoading } = useQuery({
-    queryKey: ["userProgress"],
-    queryFn: () => base44.entities.UserProgress.list("-last_accessed"),
+    queryKey: ["userProgress", user?.id],
+    queryFn: () =>
+      user
+        ? base44.entities.UserProgress.filter(
+            { user_id: user.id },
+            "-last_accessed"
+          )
+        : Promise.resolve([]),
+    enabled: !!user,
   });
 
   const { data: bookmarks = [], isLoading: bookmarksLoading } = useQuery({
-    queryKey: ["bookmarks"],
-    queryFn: () => base44.entities.Bookmark.list("-created_at"),
+    queryKey: ["bookmarks", user?.id],
+    queryFn: () =>
+      user
+        ? base44.entities.Bookmark.filter({ user_id: user.id }, "-created_at")
+        : Promise.resolve([]),
+    enabled: !!user,
   });
 
   const deleteBookmarkMutation = useMutation({

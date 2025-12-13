@@ -51,7 +51,7 @@ export default function HeroSection() {
   const slide = slides[currentSlide];
 
   return (
-    <section className="relative bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+    <section className="relative bg-gradient-to-br from-gray-50 to-white overflow-hidden pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[500px] lg:min-h-[600px] py-12 lg:py-0">
           {/* Content */}

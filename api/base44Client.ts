@@ -71,6 +71,7 @@ export interface Answer {
 
 export interface Bookmark {
   id: string;
+  user_id: string;
   course_id: string;
   course_title: string;
   lesson_title: string;
